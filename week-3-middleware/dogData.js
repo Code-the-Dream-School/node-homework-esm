@@ -1,4 +1,4 @@
-module.exports = [
+export default [
   {
     name: "Sweet Pea",
     sex: "Female",

@@ -1,5 +1,5 @@
-const express = require("express");
-const dogs = require("../dogData");
+import express from "express";
+import dogs from "../dogData.js";
 
 const router = express.Router();
 
@@ -26,4 +26,4 @@ router.get("/error", (req, res, next) => {
   next(new Error("Test error"));
 });
 
-module.exports = router;
+export default router;

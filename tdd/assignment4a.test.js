@@ -1,13 +1,12 @@
-const httpMocks = require("node-mocks-http");
-const authMiddleware = require("../middleware/auth");
-const {
-  index,
-  show,
-  create,
-  update,
-  deleteTask,
-} = require("../controllers/taskController");
-const { logon, register, logoff } = require("../controllers/userController");
+import httpMocks from "node-mocks-http";
+import authMiddleware from "../middleware/auth.js";
+import {
+  index, show, create, update, deleteTask
+} from "../controllers/taskController.js";
+import {
+  logon, register, logoff
+} from "../controllers/userController.js";
+import { describe, it, expect, fn } from 'vitest';
 
 global.users = [];
 global.tasks = [];
@@ -25,7 +24,7 @@ describe("Assignment 4a: Protected Task Routes", () => {
       global.user_id = null;
       const req = httpMocks.createRequest({ method: "GET" });
       const res = httpMocks.createResponse();
-      const next = jest.fn();
+      const next = fn();
 
       authMiddleware(req, res, next);
 
@@ -37,7 +36,7 @@ describe("Assignment 4a: Protected Task Routes", () => {
       global.user_id = { email: "jim@sample.com", name: "Jim" };
       const req = httpMocks.createRequest({ method: "GET" });
       const res = httpMocks.createResponse();
-      const next = jest.fn();
+      const next = fn();
 
       authMiddleware(req, res, next);
 

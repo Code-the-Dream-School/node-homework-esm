@@ -1,8 +1,9 @@
-const { Client } = require("pg");
-const readline = require("readline");
-const fs = require("fs").promises;
+import { Client } from "pg";
+import readline from "readline";
+import fs from "fs/promises";
+import "../setenvtest.js";
+import { expect, beforeAll, afterAll, test } from 'vitest';
 
-require("dotenv").config();
 let client = null;
 let connected_to_database = false;
 let connected_to_homework_file = false;

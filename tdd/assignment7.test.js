@@ -1,23 +1,22 @@
-require("dotenv").config();
-process.env.DATABASE_URL = process.env.TEST_DATABASE_URL;
-
-const prisma = require("../db/prisma");
-const httpMocks = require("node-mocks-http");
-const {
+import "../setenvtest.js"
+import prisma from "../db/prisma.js";
+import httpMocks from "node-mocks-http";
+import {
   index,
   show,
   create,
   update,
   deleteTask,
   bulkCreate,
-} = require("../controllers/taskController");
-const { logon, register, logoff } = require("../controllers/userController");
-const {
+} from "../controllers/taskController.js";
+import { logon, register, logoff } from "../controllers/userController.js";
+import {
   getUserAnalytics,
   getUsersWithStats,
   searchTasks,
-} = require("../controllers/analyticsController");
-const errorHandlerMiddleware = require("../middleware/error-handler");
+} from "../controllers/analyticsController.js";
+import errorHandlerMiddleware from "../middleware/error-handler.js";
+import { describe, it, expect, beforeAll, afterAll, fn } from 'vitest';
 
 
 let user1 = null;
@@ -307,7 +306,7 @@ describe("testing bulk task operations", () => {
       },
     });
     saveRes = httpMocks.createResponse();
-    const next = jest.fn((err) => {
+    const next = fn((err) => {
       if (err) {
         errorHandlerMiddleware(err, req, saveRes, () => {});
       }
@@ -451,8 +450,8 @@ let userSchema = null;
 let taskSchema = null;
 let patchTaskSchema = null;
 try {
-  userSchema = require("../validation/userSchema").userSchema;
-  ({ taskSchema, patchTaskSchema } = require("../validation/taskSchema"));
+  ({userSchema} = await import("../validation/userSchema.js"));
+  ({ taskSchema, patchTaskSchema } = await import("../validation/taskSchema.js"));
 } catch {
   // these won't be built at the start, but we want the test to proceed
 }

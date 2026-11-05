@@ -1,12 +1,13 @@
-const request = require("supertest");
-const app = require("../week-3-middleware/app");
+import request from "supertest";
+import app from "../week-3-middleware/app.js";
+import { describe, expect, beforeAll, afterAll, test, spyOn } from 'vitest';
 
 let errorSpy;
 let warnSpy;
 
 beforeAll(() => {
-	errorSpy = jest.spyOn(console, "error").mockImplementation(() => {});
-	warnSpy = jest.spyOn(console, "warn").mockImplementation(() => {});
+	errorSpy = spyOn(console, "error").mockImplementation(() => {});
+	warnSpy = spyOn(console, "warn").mockImplementation(() => {});
 });
 
 afterAll(() => {

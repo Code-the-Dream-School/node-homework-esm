@@ -16,14 +16,15 @@
 //   expect(...).toMatch(/.../) -> checks the output matches a pattern
 // ============================================================================
 
-const path = require('path');
-const fs = require('fs');
-const { execSync } = require('child_process');
+import path from "path";
+import fs from "fs";
+import { execSync } from "child_process";
+import { describe, expect, test} from 'vitest';
 
 describe('Week 1 Assignment — Core Tests', () => {
   // Where your work lives. From the `tdd` folder, "../assignment1" points to
   // your assignment1 folder, and sample-files is the folder inside it.
-  const assignmentDir = path.join(__dirname, '../assignment1');
+  const assignmentDir = path.join(import.meta.dirname, '../assignment1');
   const sampleFilesDir = path.join(assignmentDir, 'sample-files');
 
   test('globals-demo.js outputs correct globals', () => {
@@ -31,8 +32,8 @@ describe('Week 1 Assignment — Core Tests', () => {
     // Run your script and capture everything it prints.
     const output = execSync(`node ${scriptPath}`).toString();
     // Your output should include each of these lines.
-    expect(output).toContain(`__dirname: ${assignmentDir}`);
-    expect(output).toContain(`__filename: ${scriptPath}`);
+    expect(output).toContain(`import.meta.dirname: ${assignmentDir}`);
+    expect(output).toContain(`import.meta.filename: ${scriptPath}`);
     expect(output).toMatch(/Process ID:/);
     expect(output).toMatch(/Platform:/);
     expect(output).toMatch(/Custom global variable: Hello, global!/);

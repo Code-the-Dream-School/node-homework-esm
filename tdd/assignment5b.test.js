@@ -1,15 +1,14 @@
-require("dotenv").config();
-process.env.DATABASE_URL = process.env.TEST_DATABASE_URL;
-const pool = require("../db/pg-pool");
-const httpMocks = require("node-mocks-http");
-const {
-  index,
+import "../setenvtest.js";
+import pool from "../db/pool.js";
+import httpMocks from "node-mocks-http";
+import {  index,
   show,
   create,
   update,
   deleteTask,
-} = require("../controllers/taskController");
-const { logon, register, logoff } = require("../controllers/userController");
+} from "../controllers/taskController.js";
+import { logon, register, logoff } from "../controllers/userController.js";
+import { describe, it, expect, afterAll } from 'vitest';
 
 let user1 = null;
 let user2 = null;
@@ -22,7 +21,7 @@ describe("test that database and tables exist", () => {
     let databaseExists = true;
     try {
       await pool.query("SELECT 1;");
-    } catch (err) {
+    } catch {
       console.log("Error: the test database hasn't been created.");
       databaseExists = false;
     }
@@ -264,9 +263,11 @@ let userSchema = null;
 let taskSchema = null;
 let patchTaskSchema = null;
 try {
-  userSchema = require("../validation/userSchema").userSchema;
-  ({ taskSchema, patchTaskSchema } = require("../validation/taskSchema"));
-} catch {}
+  userSchema = await import("../validation/userSchema.js").userSchema;
+  ({ taskSchema, patchTaskSchema } = await import("../validation/taskSchema.js"));
+} catch {
+  // do nothing
+}
 
 it("finds the user and task schemas", () => {
   expect(userSchema).toBeDefined();

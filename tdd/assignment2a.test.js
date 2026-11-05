@@ -1,11 +1,13 @@
-const path = require("path");
-const fs = require("fs");
-const http = require("http");
-const { spawn } = require("child_process");
+import path from "path";
+import fs from "fs";
+import http from "http";
+import { spawn } from "child_process";
+import request from "supertest";
+import { describe, expect, beforeAll, afterAll, test, spyOn } from 'vitest';
 
 describe("Assignment 2a: Core Events, HTTP, and Express", () => {
-  const assignmentDir = path.join(__dirname, "../assignment2");
-  const rootDir = path.join(__dirname, "..");
+  const assignmentDir = path.join(import.meta.dirname, "../assignment2");
+  const rootDir = path.join(import.meta.dirname, "..");
   const httpPath = path.join(assignmentDir, "sampleHTTP.js");
 
   let rawServerProcess;
@@ -50,7 +52,7 @@ describe("Assignment 2a: Core Events, HTTP, and Express", () => {
       try {
         await requestRawServer({ path: "/time" });
         return;
-      } catch (error) {
+      } catch {
         await new Promise((resolve) => setTimeout(resolve, 100));
       }
     }
@@ -82,15 +84,15 @@ describe("Assignment 2a: Core Events, HTTP, and Express", () => {
   });
 
   describe("Task 1: Event Emitter and Listener", () => {
-    test("events.js should exist, export an emitter, and log time messages", () => {
+    test("events.js should exist, export an emitter, and log time messages", async () => {
       const eventsPath = path.join(assignmentDir, "events.js");
       expect(fs.existsSync(eventsPath)).toBe(true);
 
-      const emitter = require(eventsPath);
+      const emitter = await import(eventsPath);
       expect(typeof emitter.emit).toBe("function");
       expect(emitter.listenerCount("time")).toBe(1);
 
-      const logSpy = jest.spyOn(console, "log").mockImplementation(() => {});
+      const logSpy = spyOn(console, "log").mockImplementation(() => {});
       emitter.emit("time", "test time");
       expect(logSpy).toHaveBeenCalledWith("Time received:", "test time");
       logSpy.mockRestore();
@@ -138,9 +140,8 @@ describe("Assignment 2a: Core Events, HTTP, and Express", () => {
     });
   });
 
-  describe("Tasks 4 and 5: Express Application", () => {
-    const request = require("supertest");
-    const { app, server } = require("../app");
+  describe("Tasks 4 and 5: Express Application", async () => {
+    const { app, server } = await import("../app.js");
     let agent;
 
     beforeAll(() => {
@@ -171,11 +172,11 @@ describe("Assignment 2a: Core Events, HTTP, and Express", () => {
       });
     });
 
-    test("controllers/timeController.js should export time handlers", () => {
+    test("controllers/timeController.js should export time handlers", async () => {
       const controllerPath = path.join(rootDir, "controllers/timeController.js");
       expect(fs.existsSync(controllerPath)).toBe(true);
 
-      const timeController = require(controllerPath);
+      const timeController = await import(controllerPath);
       expect(typeof timeController.getTime).toBe("function");
       expect(typeof timeController.echoBody).toBe("function");
     });

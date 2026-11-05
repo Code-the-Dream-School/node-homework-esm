@@ -1,24 +1,23 @@
-require("dotenv").config();
-process.env.DATABASE_URL = process.env.TEST_DATABASE_URL;
-process.env.RECAPTCHA_BYPASS = process.env.JWT_SECRET;
-const prisma = require("../db/prisma");
-const httpMocks = require("node-mocks-http");
-const EventEmitter = require("events").EventEmitter;
-const jwt = require("jsonwebtoken");
-const waitForRouteHandlerCompletion = require("./waitForRouteHandlerCompletion");
-let jwtCookie;
-
-const {
+import "../setenvtest.js"
+import prisma from "../db/prisma.js";
+import httpMocks from "node-mocks-http";
+import { EventEmitter } from "events";
+import jwt from "jsonwebtoken";
+import waitForRouteHandlerCompletion from "./waitForRouteHandlerCompletion.js";
+import {
   index,
   show,
   create,
   update,
   deleteTask,
-} = require("../controllers/taskController");
-const { register, logoff, logon } = require("../controllers/userController");
-const jwtMiddleware = require("../middleware/jwtMiddleware");
+} from "../controllers/taskController.js";
+import { register, logoff, logon } from "../controllers/userController.js";
+import jwtMiddleware from "../middleware/jwtMiddleware.js";
+import cookie from "cookie";
+import { describe, it, expect, beforeAll, afterAll } from 'vitest';
+import request from "supertest";
 
-const cookie = require("cookie");
+let jwtCookie;
 function MockResponseWithCookies() {
   const res = httpMocks.createResponse({
     eventEmitter: EventEmitter,
@@ -375,8 +374,8 @@ let userSchema = null;
 let taskSchema = null;
 let patchTaskSchema = null;
 try {
-  userSchema = require("../validation/userSchema").userSchema;
-  ({ taskSchema, patchTaskSchema } = require("../validation/taskSchema"));
+  ({userSchema} = await import("../validation/userSchema.js"));
+  ({ taskSchema, patchTaskSchema } = await import("../validation/taskSchema.js"));
 } catch {
   // these won't be built at the start, but we want the test to proceed
 }
@@ -488,9 +487,8 @@ if (taskSchema) {
   });
 }
 
-describe("function tests of user operations", () => {
-  const request = require("supertest");
-  const { app, server } = require("../app");
+describe("function tests of user operations", async () => {
+  const { app, server } = await import("../app.js");
   let agent;
 
   beforeAll(async () => {

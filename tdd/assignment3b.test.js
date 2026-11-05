@@ -1,14 +1,15 @@
-const request = require("supertest");
-const app = require("../week-3-middleware/app");
-const fs = require("fs");
-const path = require("path");
+import request from "supertest";
+import app from "../week-3-middleware/app.js";
+import fs from "fs";
+import path from "path";
+import { describe, expect, beforeAll, afterAll, test, spyOn } from 'vitest';
 
 let logSpy;
 let errorSpy;
 
 beforeAll(() => {
-	logSpy = jest.spyOn(console, "log").mockImplementation(() => {});
-	errorSpy = jest.spyOn(console, "error").mockImplementation(() => {});
+	logSpy = spyOn(console, "log").mockImplementation(() => {});
+	errorSpy = spyOn(console, "error").mockImplementation(() => {});
 });
 
 afterAll(() => {
@@ -40,7 +41,7 @@ describe("Assignment 3b: Dog Rescue Middleware", () => {
 
 		describe("Static file middleware should serve images from week-3-middleware/public/images", () => {
 			let res;
-			const imagePath = path.join(__dirname, "../week-3-middleware/public/images/dachshund.png");
+			const imagePath = path.join(import.meta.dirname, "../week-3-middleware/public/images/dachshund.png");
 
 			beforeAll(() => {
 				if (!fs.existsSync(imagePath)) {

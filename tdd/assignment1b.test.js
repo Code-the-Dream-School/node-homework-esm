@@ -7,14 +7,15 @@
 //
 // ============================================================================
 
-const path = require('path');
-const fs = require('fs');
-const { execSync } = require('child_process');
+import path from "path";
+import fs from "fs";
+import { execSync } from "child_process";
+import { describe, expect, test } from 'vitest';
 
 describe('Week 1 Assignment — Advanced Tests (Optional)', () => {
   // Same locations as the core tests: your assignment1 folder and the
   // sample-files folder inside it.
-  const assignmentDir = path.join(__dirname, '../assignment1');
+  const assignmentDir = path.join(import.meta.dirname, '../assignment1');
   const sampleFilesDir = path.join(assignmentDir, 'sample-files');
 
   test('core-modules-demo.js streams a large file', () => {

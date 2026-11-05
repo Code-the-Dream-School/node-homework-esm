@@ -1,22 +1,22 @@
-require("dotenv").config();
-process.env.DATABASE_URL = process.env.TEST_DATABASE_URL;
-const prisma = require("../db/prisma");
-const httpMocks = require("node-mocks-http");
-const EventEmitter = require("events").EventEmitter;
-const jwt = require("jsonwebtoken");
-const waitForRouteHandlerCompletion = require("./waitForRouteHandlerCompletion");
-
-const {
+import "../setenvtest.js";
+import prisma from "../db/prisma.js";
+import httpMocks from "node-mocks-http";
+import { EventEmitter } from "events";
+import jwt from "jsonwebtoken";
+import waitForRouteHandlerCompletion from "./waitForRouteHandlerCompletion.js";
+import {
   index,
   show,
   create,
   update,
   deleteTask,
-} = require("../controllers/taskController");
-const { register, logoff, logon } = require("../controllers/userController");
-const jwtMiddleware = require("../middleware/jwtMiddleware");
+} from "../controllers/taskController.js";
+import { register, logoff, logon } from "../controllers/userController.js";
+import jwtMiddleware from "../middleware/jwtMiddleware.js";
+import cookie from "cookie";
+import { describe, it, expect, beforeAll, afterAll } from 'vitest';
+import request from "supertest";
 
-const cookie = require("cookie");
 function MockResponseWithCookies() {
   const res = httpMocks.createResponse({
     eventEmitter: EventEmitter,
@@ -77,6 +77,7 @@ describe("testing logon, register, and logoff", () => {
     await waitForRouteHandlerCompletion(logon, req, saveRes);
     expect(saveRes.statusCode).toBe(200); // success!
   });
+  let jwtCookie;
   it("A string in the Set-Cookie array starts with jwt=.", () => {
     const setCookieArray = saveRes.get("Set-Cookie");
     jwtCookie = setCookieArray.find((str) => str.startsWith("jwt="));
@@ -190,6 +191,7 @@ describe("Testing JWT middleware", () => {
     await waitForRouteHandlerCompletion(jwtMiddleware, req, saveRes);
     expect(saveRes.statusCode).toBe(401);
   });
+  let saveReq;
   it("Calls next() if both the token and the jwt are good.", async () => {
     const req = httpMocks.createRequest({
       method: "POST",
@@ -369,8 +371,8 @@ let userSchema = null;
 let taskSchema = null;
 let patchTaskSchema = null;
 try {
-  userSchema = require("../validation/userSchema").userSchema;
-  ({ taskSchema, patchTaskSchema } = require("../validation/taskSchema"));
+  ({userSchema} = await import("../validation/userSchema.js"));
+  ({ taskSchema, patchTaskSchema } = await import("../validation/taskSchema.js"));
 } catch {
   // these won't be built at the start, but we want the test to proceed
 }
@@ -482,9 +484,8 @@ if (taskSchema) {
   });
 }
 
-describe("function tests of user operations", () => {
-  const request = require("supertest");
-  const { app, server } = require("../app");
+describe("function tests of user operations", async () => {
+  const { app, server } = await import("../app.js");
   let agent;
 
   beforeAll(async () => {

@@ -1,10 +1,12 @@
-const path = require("path");
-const fs = require("fs");
-const http = require("http");
-const { spawn } = require("child_process");
+import path from "path";
+import fs from "fs";
+import http from "http";
+import { spawn } from "child_process";
+import { describe, expect, beforeAll, afterAll, test } from 'vitest';
+import request from "supertest";
 
 describe("Assignment 2b: Advanced HTTP and Express Edge Cases", () => {
-  const assignmentDir = path.join(__dirname, "../assignment2");
+  const assignmentDir = path.join(import.meta.dirname, "../assignment2");
   const httpPath = path.join(assignmentDir, "sampleHTTP.js");
 
   let rawServerProcess;
@@ -49,7 +51,7 @@ describe("Assignment 2b: Advanced HTTP and Express Edge Cases", () => {
       try {
         await requestRawServer({ path: "/time" });
         return;
-      } catch (error) {
+      } catch {
         await new Promise((resolve) => setTimeout(resolve, 100));
       }
     }
@@ -106,9 +108,8 @@ describe("Assignment 2b: Advanced HTTP and Express Edge Cases", () => {
     });
   });
 
-  describe("Task 8: Express Unknown Route", () => {
-    const request = require("supertest");
-    const { app, server } = require("../app");
+  describe("Task 8: Express Unknown Route", async () => {
+    const { app, server } = await import("../app.js");
     let agent;
 
     beforeAll(() => {

@@ -1,7 +1,9 @@
+import {fn} from "vitest";
+
 const waitForRouteHandlerCompletion = async (func, req, res) => {
   let next;
   const promise = new Promise((resolve, reject) => {
-    next = jest.fn((err) => {
+    next = fn((err) => {
       if (err) return reject(err);
       resolve();
     });
@@ -13,4 +15,4 @@ const waitForRouteHandlerCompletion = async (func, req, res) => {
   await promise;
   return next;
 };
-module.exports = waitForRouteHandlerCompletion;
+export default waitForRouteHandlerCompletion;

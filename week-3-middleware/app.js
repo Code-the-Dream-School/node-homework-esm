@@ -1,5 +1,5 @@
-const express = require("express");
-const dogsRouter = require("./routes/dogs");
+import express from "express";
+import dogsRouter from "./routes/dogs.js"
 
 const app = express();
 
@@ -11,10 +11,10 @@ const app = express();
 app.use("/", dogsRouter);// Do not remove this line
 
 
-if (require.main === module) {
+if (import.meta.main) {
   app.listen(3000, () => {
     console.log("Dog rescue app is listening on port 3000...");
   });
 }
 
-module.exports = app;
+export default app;

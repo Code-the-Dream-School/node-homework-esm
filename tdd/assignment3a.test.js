@@ -1,5 +1,6 @@
-const httpMocks = require("node-mocks-http");
-const { logon, register, logoff } = require("../controllers/userController");
+import httpMocks from "node-mocks-http";
+import { logon, register, logoff } from "../controllers/userController.js";
+import { describe, it, expect, } from 'vitest';
 
 // a few useful globals
 let saveRes = null;

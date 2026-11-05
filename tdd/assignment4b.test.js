@@ -1,8 +1,9 @@
-const httpMocks = require("node-mocks-http");
-const { create, update } = require("../controllers/taskController");
-const { logon, register } = require("../controllers/userController");
-const { userSchema } = require("../validation/userSchema");
-const { taskSchema, patchTaskSchema } = require("../validation/taskSchema");
+import httpMocks from "node-mocks-http";
+import { create, update } from "../controllers/taskController.js";
+import { logon, register } from "../controllers/userController.js";
+import { userSchema } from "../validation/userSchema.js";
+import { taskSchema, patchTaskSchema } from "../validation/taskSchema.js";
+import { describe, it, expect, beforeEach } from 'vitest';
 
 describe("Assignment 4b: Advanced Validation, Patch Updates, and Password Security", () => {
   beforeEach(() => {

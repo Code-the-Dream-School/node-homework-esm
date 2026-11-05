@@ -1,6 +1,6 @@
-require("dotenv").config();
-
-const { faker } = require("@faker-js/faker");
+import "../setenv.js"
+import { faker } from "@faker-js/faker";
+import prisma from "../prisma/prisma.js"
 
 if (process.argv.length<3) {
     console.log("One command line parameter is required, the email of a user registered in the database.")
@@ -10,8 +10,6 @@ function getRandomDateTimeLast5Weeks() {
   return new Date(Date.now() - Math.random() * 35 * 24 * 60 * 60 * 1000);
 }
 
-(async ()=>{
-    const prisma = require("../db/prisma");
 const user = await prisma.user.findUnique({where: { email: process.argv[2].toLowerCase()}});
 if (!user) {
     console.log("No user with that email was found in the database.")
@@ -31,4 +29,3 @@ if (!user) {
     await prisma.task.createMany({data: tasks})
 }
 await prisma.$disconnect();
-})();

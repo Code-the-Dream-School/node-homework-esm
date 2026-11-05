@@ -1,15 +1,15 @@
-require("dotenv").config();
-process.env.DATABASE_URL = process.env.TEST_DATABASE_URL;
-const prisma = require("../db/prisma");
-const httpMocks = require("node-mocks-http");
-const {
+import "../setenvtest.js";
+import prisma from "../db/prisma.js";
+import httpMocks from "node-mocks-http";
+import {
   index,
   show,
   create,
   update,
   deleteTask,
-} = require("../controllers/taskController");
-const { logon, register, logoff } = require("../controllers/userController");
+} from "../controllers/taskController.js";
+import { logon, register, logoff } from "../controllers/userController.js";
+import { describe, it, expect, beforeAll, afterAll} from 'vitest';
 
 // a few useful globals
 let user1 = null;
@@ -249,8 +249,8 @@ let userSchema = null;
 let taskSchema = null;
 let patchTaskSchema = null;
 try {
-  userSchema = require("../validation/userSchema").userSchema;
-  ({ taskSchema, patchTaskSchema } = require("../validation/taskSchema"));
+  ({ userSchema } = await import("../validation/userSchema.js"));
+  ({ taskSchema, patchTaskSchema } = await import("../validation/taskSchema.js"));
 } catch {
   // these won't be built at the start, but we want the test to proceed
 }
