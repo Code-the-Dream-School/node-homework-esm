@@ -1,0 +1,12 @@
+{
+  "name": "homework-esm",
+  "version": "1.0.0",
+  "description": "Code The Dream Homework Repository for Node Class",
+  "license": "ISC",
+  "author": "",
+  "type": "module",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  }
+}
