@@ -8,7 +8,7 @@
   "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "tdd": "./tdd.sh",
+    "tdd": "node tdd.js",
     "start": "node app.js",
     "week3": "nodemon ./week-3-middleware/app",
     "lesson9TDD": "vitest run --config ./lesson9TDD/vitestConfig/vitest.config.js",
