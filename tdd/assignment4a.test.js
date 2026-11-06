@@ -1,12 +1,18 @@
 import httpMocks from "node-mocks-http";
+// eslint-disable-next-line n/no-missing-import -- created by student in this assignment
 import authMiddleware from "../middleware/auth.js";
+/* eslint-disable n/no-missing-import -- created by student in this assignment */
 import {
-  index, show, create, update, deleteTask
+  index,
+  show,
+  create,
+  update,
+  deleteTask,
 } from "../controllers/taskController.js";
-import {
-  logon, register, logoff
-} from "../controllers/userController.js";
-import { describe, it, expect, fn } from 'vitest';
+/* eslint-enable n/no-missing-import */
+// eslint-disable-next-line n/no-missing-import -- created by student in this assignment
+import { logon, register, logoff } from "../controllers/userController.js";
+import { describe, it, expect, fn } from "vitest";
 
 global.users = [];
 global.tasks = [];

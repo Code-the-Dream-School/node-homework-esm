@@ -1,4 +1,4 @@
-import {fn} from "vitest";
+import { fn } from "vitest";
 
 const waitForRouteHandlerCompletion = async (func, req, res) => {
   let next;

@@ -1,6 +1,7 @@
 import httpMocks from "node-mocks-http";
+// eslint-disable-next-line n/no-missing-import -- created by student in this assignment
 import { logon, register, logoff } from "../controllers/userController.js";
-import { describe, it, expect, } from 'vitest';
+import { describe, it, expect } from "vitest";
 
 // a few useful globals
 let saveRes = null;

@@ -1,4 +1,9 @@
-class Reporter {
+// Vitest reporter for the lesson 9 TDD assignment.
+// Each student test title starts with its number, e.g. "46. creates a task".
+// The reporter records whether each test passed or failed and compares that
+// with the expected result for the assignment.
+
+export default class TDDReporter {
   constructor() {
     this.required = {
       "46.": { expected: "passed", observed: "not implemented" },
@@ -60,95 +65,62 @@ class Reporter {
       "65.": { expected: "passed", observed: "not implemented" },
     };
   }
-  onTestResult(_, result) {
-    for (const test of result.testResults) {
-      const i = test.title.indexOf(".");
-      if (i !== -1) {
-        const keyToUse = test.title.slice(0, i + 1);
-        if (keyToUse in this.required) {
-          this.required[keyToUse].observed = test.status;
-          this.required[keyToUse].title = test.title;
-        } else if (keyToUse in this.optional) {
-          this.optional[keyToUse].observed = test.status;
-          this.optional[keyToUse].title = test.title;
-        }
-      }
+
+  // Called by Vitest once for each test as it finishes.
+  // Replaces Jest's onTestResult, which received all of a file's tests at once.
+  onTestCaseResult(testCase) {
+    const title = testCase.name; // the test's own title, like Jest's test.title
+    const i = title.indexOf(".");
+    if (i === -1) return;
+    const key = title.slice(0, i + 1);
+    const entry = this.required[key] ?? this.optional[key];
+    if (entry) {
+      // Vitest states: "passed", "failed", "skipped" or "pending"
+      entry.observed = testCase.result().state;
+      entry.title = title;
     }
   }
-  onRunComplete() {
-    const requiredCorrect = [];
-    const requiredNotImplemented = [];
-    const optionalCorrect = [];
-    const optionalNotImplemented = [];
-    const requiredErrorList = [];
-    const optionalErrorList = [];
-    for (const key in this.required) {
-      if (this.required[key].expected == this.required[key].observed) {
-        requiredCorrect.push(parseInt(key));
-      } else if (this.required[key].observed == "not implemented") {
-        requiredNotImplemented.push(parseInt(key));
+
+  // Called by Vitest once after all test files have run.
+  // Replaces Jest's onRunComplete.
+  onTestRunEnd() {
+    this.report("Required", this.required);
+    this.report("Optional", this.optional);
+  }
+
+  report(label, tests) {
+    const correct = [];
+    const notImplemented = [];
+    const errorList = [];
+    for (const key in tests) {
+      const t = tests[key];
+      if (t.expected === t.observed) {
+        correct.push(parseInt(key));
+      } else if (t.observed === "not implemented") {
+        notImplemented.push(parseInt(key));
       } else {
-        requiredErrorList.push({
+        errorList.push({
           testNumber: parseInt(key),
-          title: this.required[key].title,
-          expected: this.required[key].expected,
-          returned: this.required[key].observed,
+          title: t.title,
+          expected: t.expected,
+          returned: t.observed,
         });
       }
     }
-    for (const key in this.optional) {
-      if (this.optional[key].expected == this.optional[key].observed) {
-        optionalCorrect.push(parseInt(key));
-      } else if (this.optional[key].observed == "not implemented") {
-        optionalNotImplemented.push(parseInt(key));
-      } else {
-        optionalErrorList.push({
-          testNumber: parseInt(key),
-          title: this.optional[key].title,
-          expected: this.optional[key].expected,
-          returned: this.optional[key].observed,
-        });
-      }
-    }
-    requiredCorrect.sort((a, b) => a - b);
-    requiredNotImplemented.sort((a, b) => a - b);
-    requiredErrorList.sort((a, b) => a.testNumber - b.testNumber);
-    optionalCorrect.sort((a, b) => a - b);
-    optionalNotImplemented.sort((a, b) => a - b);
-    optionalErrorList.sort((a, b) => a.testNumber - b.testNumber);
-    console.log("Required part of the Assignment:");
-    console.log("The following tests gave correct results: ", requiredCorrect);
-    if (requiredNotImplemented.length > 0) {
-      console.log(
-        "The following tests were not implemented: ",
-        requiredNotImplemented,
-      );
+    correct.sort((a, b) => a - b);
+    notImplemented.sort((a, b) => a - b);
+    errorList.sort((a, b) => a.testNumber - b.testNumber);
+
+    console.log(`${label} part of the Assignment:`);
+    console.log("The following tests gave correct results: ", correct);
+    if (notImplemented.length > 0) {
+      console.log("The following tests were not implemented: ", notImplemented);
     } else {
       console.log("All tests were implemented.");
     }
-    if (requiredErrorList.length > 0) {
+    if (errorList.length > 0) {
       console.log("The following tests did not report the expected results:");
-      for (const row of requiredErrorList) {
-        console.log(
-          `⚠️   ${row.title} should have returned ${row.expected} but instead returned ${row.returned}.`,
-        );
-      }
-    } else {
-      console.log("All implemented tests gave the expected results.");
-    }
-    console.log("Optional part of the Assignment:");
-    console.log("The following tests gave correct results: ", optionalCorrect);
-    if (optionalNotImplemented.length > 0) {
-      console.log(
-        "The following tests were not implemented: ",
-        optionalNotImplemented,
-      );
-    } else {
-      console.log("All tests were implemented.");
-    }
-    if (optionalErrorList.length > 0) {
-      console.log("The following tests did not report the expected results:");
-      for (const row of optionalErrorList) {
+      for (const row of errorList) {
         console.log(
           `⚠️   ${row.title} should have returned ${row.expected} but instead returned ${row.returned}.`,
         );
@@ -158,4 +130,3 @@ class Reporter {
     }
   }
 }
-module.exports = Reporter;

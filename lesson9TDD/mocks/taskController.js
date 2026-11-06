@@ -1,25 +1,27 @@
-const prisma = require("../../db/prisma");
-const { taskSchema, patchTaskSchema } = require("../validation/taskSchema");
+// eslint-disable-next-line n/no-missing-import -- created by student in this assignment
+import prisma from "../../db/prisma.js";
+// eslint-disable-next-line n/no-missing-import -- created by student in this assignment
+import { taskSchema, patchTaskSchema } from "../validation/taskSchema.js";
 
-const whereClause = (query) => {
-  const filters = [];
-  if (query.find) {
-    filters.push({ title: { contains: query.find, mode: "insensitive" } });
-  }
-  if (query.isCompleted) {
-    const boolToFind = query.isCompleted === "true";
-    filters.push({ isCompleted: boolToFind });
-  }
-  if (query.priority) {
-    filters.push({ priority: query.priority });
-  }
-  if (query.max_date) {
-    filters.push({ createdAt: { lte: new Date(query.max_date) } });
-  }
-  if (query.min_date) {
-    filters.push({ createdAt: { gte: new Date(query.min_date) } });
-  }
-};
+// const whereClause = (query) => {
+//   const filters = [];
+//   if (query.find) {
+//     filters.push({ title: { contains: query.find, mode: "insensitive" } });
+//   }
+//   if (query.isCompleted) {
+//     const boolToFind = query.isCompleted === "true";
+//     filters.push({ isCompleted: boolToFind });
+//   }
+//   if (query.priority) {
+//     filters.push({ priority: query.priority });
+//   }
+//   if (query.max_date) {
+//     filters.push({ createdAt: { lte: new Date(query.max_date) } });
+//   }
+//   if (query.min_date) {
+//     filters.push({ createdAt: { gte: new Date(query.min_date) } });
+//   }
+// };
 
 const getFields = (fields) => {
   const fieldList = fields.split(",");
@@ -45,7 +47,7 @@ const getFields = (fields) => {
   return taskSelect;
 };
 
-exports.index = async (req, res) => {
+const index = async (req, res) => {
   const page = parseInt(req.query.page) || 1;
   const limit = parseInt(req.query.limit) || 10;
   const skip = (page - 1) * limit;
@@ -108,7 +110,7 @@ exports.index = async (req, res) => {
   });
 };
 
-exports.show = async (req, res) => {
+const show = async (req, res) => {
   const id = parseInt(req.params?.id);
   if (!id) {
     return res.status(400).json({ message: "Invalid task id." });
@@ -143,11 +145,11 @@ exports.show = async (req, res) => {
   res.status(200).json(task);
 };
 
-exports.create = async (req, res) => {
+const create = async (req, res) => {
   // Use global user_id (set during login/registration)
   const { error, value } = taskSchema.validate(req.body);
 
-  if (error) return next(error);
+  if (error) throw error;
 
   const newTask = await prisma.task.create({
     data: {
@@ -166,7 +168,7 @@ exports.create = async (req, res) => {
   res.status(201).json(newTask);
 };
 
-exports.update = async (req, res, next) => {
+const update = async (req, res) => {
   const id = parseInt(req.params?.id);
   if (!id) {
     return res.status(400).json({ message: "Invalid task id." });
@@ -175,13 +177,14 @@ exports.update = async (req, res, next) => {
     req.body = {};
   }
   const { error, value } = patchTaskSchema.validate(req.body);
-  if (error) return next(error);
+  if (error) throw error;
   let task;
   try {
     task = await prisma.task.update({
-      where: { id, 
+      where: {
+        id,
         // userId: req.user.id, bug
-       },
+      },
       data: value,
       select: {
         id: true,
@@ -195,12 +198,12 @@ exports.update = async (req, res, next) => {
     if (err.code === "P2025") {
       return res.status(404).json({ message: "The task was not found." });
     }
-    return next(err);
+    throw err;
   }
   res.status(200).json(task);
 };
 
-exports.deleteTask = async (req, res, next) => {
+const deleteTask = async (req, res) => {
   // const id = parseInt(req.params?.id);
   // if (!id) {
   //   return res.status(400).json({ message: "Invalid task id." });
@@ -227,7 +230,7 @@ exports.deleteTask = async (req, res, next) => {
   res.json({}); // bug
 };
 
-exports.bulkCreate = async (req, res, next) => {
+const bulkCreate = async (req, res) => {
   // Validate the tasks array
   const tasks = req.body?.tasks;
   if (!tasks || !Array.isArray(tasks) || tasks.length === 0) {
@@ -240,7 +243,7 @@ exports.bulkCreate = async (req, res, next) => {
   const validTasks = [];
   for (const task of tasks) {
     const { error, value } = taskSchema.validate(task);
-    if (error) return next(error);
+    if (error) throw error;
     validTasks.push({
       title: value.title,
       isCompleted: value.isCompleted || false,
@@ -264,3 +267,5 @@ exports.bulkCreate = async (req, res, next) => {
     totalRequested: validTasks.length,
   });
 };
+
+export default { index, show, create, bulkCreate, deleteTask, update };

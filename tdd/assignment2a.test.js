@@ -3,7 +3,7 @@ import fs from "fs";
 import http from "http";
 import { spawn } from "child_process";
 import request from "supertest";
-import { describe, expect, beforeAll, afterAll, test, spyOn } from 'vitest';
+import { describe, expect, beforeAll, afterAll, test, spyOn } from "vitest";
 
 describe("Assignment 2a: Core Events, HTTP, and Express", () => {
   const assignmentDir = path.join(import.meta.dirname, "../assignment2");
@@ -141,6 +141,7 @@ describe("Assignment 2a: Core Events, HTTP, and Express", () => {
   });
 
   describe("Tasks 4 and 5: Express Application", async () => {
+    // eslint-disable-next-line n/no-missing-import -- created by student in this assignment
     const { app, server } = await import("../app.js");
     let agent;
 
@@ -173,7 +174,10 @@ describe("Assignment 2a: Core Events, HTTP, and Express", () => {
     });
 
     test("controllers/timeController.js should export time handlers", async () => {
-      const controllerPath = path.join(rootDir, "controllers/timeController.js");
+      const controllerPath = path.join(
+        rootDir,
+        "controllers/timeController.js",
+      );
       expect(fs.existsSync(controllerPath)).toBe(true);
 
       const timeController = await import(controllerPath);

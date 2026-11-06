@@ -1,14 +1,19 @@
 import "../setenvtest.js";
+// eslint-disable-next-line n/no-missing-import -- created by student in this assignment
 import pool from "../db/pool.js";
 import httpMocks from "node-mocks-http";
-import {  index,
+/* eslint-disable n/no-missing-import -- created by student in this assignment */
+import {
+  index,
   show,
   create,
   update,
   deleteTask,
 } from "../controllers/taskController.js";
+/* eslint-enable n/no-missing-import */
+// eslint-disable-next-line n/no-missing-import -- created by student in this assignment
 import { logon, register, logoff } from "../controllers/userController.js";
-import { describe, it, expect, afterAll } from 'vitest';
+import { describe, it, expect, afterAll } from "vitest";
 
 let user1 = null;
 let user2 = null;
@@ -263,15 +268,18 @@ let userSchema = null;
 let taskSchema = null;
 let patchTaskSchema = null;
 try {
+  /* eslint-disable n/no-missing-import -- created by student in this assignment */
   userSchema = await import("../validation/userSchema.js").userSchema;
-  ({ taskSchema, patchTaskSchema } = await import("../validation/taskSchema.js"));
+  ({ taskSchema, patchTaskSchema } =
+    await import("../validation/taskSchema.js"));
+    /* eslint-enable n/no-missing-import */
 } catch {
   // do nothing
 }
 
 it("finds the user and task schemas", () => {
-  expect(userSchema).toBeDefined();
-  expect(taskSchema).toBeDefined();
+  expect(userSchema).toBeTruthy();
+  expect(taskSchema).toBeTruthy();
 });
 
 if (userSchema) {

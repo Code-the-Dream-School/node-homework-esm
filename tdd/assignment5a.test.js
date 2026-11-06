@@ -2,7 +2,7 @@ import { Client } from "pg";
 import readline from "readline";
 import fs from "fs/promises";
 import "../setenvtest.js";
-import { expect, beforeAll, afterAll, test } from 'vitest';
+import { expect, beforeAll, afterAll, test } from "vitest";
 
 let client = null;
 let connected_to_database = false;

@@ -1,9 +1,11 @@
-import "../setenvtest.js"
+import "../setenvtest.js";
+// eslint-disable-next-line n/no-missing-import -- created by student in this assignment
 import prisma from "../db/prisma.js";
 import httpMocks from "node-mocks-http";
 import { EventEmitter } from "events";
 import jwt from "jsonwebtoken";
 import waitForRouteHandlerCompletion from "./waitForRouteHandlerCompletion.js";
+/* eslint-disable n/no-missing-import -- created by student in this assignment */
 import {
   index,
   show,
@@ -13,8 +15,9 @@ import {
 } from "../controllers/taskController.js";
 import { register, logoff, logon } from "../controllers/userController.js";
 import jwtMiddleware from "../middleware/jwtMiddleware.js";
+/* eslint-enable n/no-missing-import */
 import cookie from "cookie";
-import { describe, it, expect, beforeAll, afterAll } from 'vitest';
+import { describe, it, expect, beforeAll, afterAll } from "vitest";
 import request from "supertest";
 
 let jwtCookie;
@@ -374,14 +377,17 @@ let userSchema = null;
 let taskSchema = null;
 let patchTaskSchema = null;
 try {
-  ({userSchema} = await import("../validation/userSchema.js"));
-  ({ taskSchema, patchTaskSchema } = await import("../validation/taskSchema.js"));
+/* eslint-disable n/no-missing-import -- created by student in this assignment */
+  ({ userSchema } = await import("../validation/userSchema.js"));
+  ({ taskSchema, patchTaskSchema } =
+    await import("../validation/taskSchema.js"));
+/* eslint-enable n/no-missing-import -- created by student in this assignment */
 } catch {
   // these won't be built at the start, but we want the test to proceed
 }
 it("finds the user and task schemas", () => {
-  expect(userSchema).toBeDefined();
-  expect(taskSchema).toBeDefined();
+  expect(userSchema).toBeTruthy();
+  expect(taskSchema).toBeTruthy();
 });
 if (userSchema) {
   describe("user object validation tests", () => {
@@ -488,6 +494,7 @@ if (taskSchema) {
 }
 
 describe("function tests of user operations", async () => {
+  // eslint-disable-next-line n/no-missing-import -- created by student in this assignment
   const { app, server } = await import("../app.js");
   let agent;
 
@@ -507,8 +514,10 @@ describe("function tests of user operations", async () => {
         email: "jdeere@example.com",
         password: "Pa$$word20",
       };
-      saveRes = await agent.post("/api/users/register")
-        .set("X-Recaptcha-Test", process.env.JWT_SECRET).send(newUser);
+      saveRes = await agent
+        .post("/api/users/register")
+        .set("X-Recaptcha-Test", process.env.JWT_SECRET)
+        .send(newUser);
       expect(saveRes.status).toBe(201);
     });
     it("47. Registration returns an object with the expected name.", () => {

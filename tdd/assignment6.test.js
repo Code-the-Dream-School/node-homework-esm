@@ -1,6 +1,8 @@
 import "../setenvtest.js";
+// eslint-disable-next-line n/no-missing-import -- created by student in this assignment
 import prisma from "../db/prisma.js";
 import httpMocks from "node-mocks-http";
+/* eslint-disable n/no-missing-import -- created by student in this assignment */
 import {
   index,
   show,
@@ -9,7 +11,8 @@ import {
   deleteTask,
 } from "../controllers/taskController.js";
 import { logon, register, logoff } from "../controllers/userController.js";
-import { describe, it, expect, beforeAll, afterAll} from 'vitest';
+/* eslint-enable n/no-missing-import */
+import { describe, it, expect, beforeAll, afterAll } from "vitest";
 
 // a few useful globals
 let user1 = null;
@@ -249,15 +252,18 @@ let userSchema = null;
 let taskSchema = null;
 let patchTaskSchema = null;
 try {
+  /* eslint-disable n/no-missing-import -- created by student in this assignment */
   ({ userSchema } = await import("../validation/userSchema.js"));
-  ({ taskSchema, patchTaskSchema } = await import("../validation/taskSchema.js"));
+  ({ taskSchema, patchTaskSchema } =
+    await import("../validation/taskSchema.js"));
+  /* eslint-enable n/no-missing-import */
 } catch {
   // these won't be built at the start, but we want the test to proceed
 }
 
 it("finds the user and task schemas", () => {
-  expect(userSchema).toBeDefined();
-  expect(taskSchema).toBeDefined();
+  expect(userSchema).toBeTruthy();
+  expect(taskSchema).toBeTruthy();
 });
 
 if (userSchema) {

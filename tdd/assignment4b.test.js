@@ -1,9 +1,13 @@
 import httpMocks from "node-mocks-http";
+// eslint-disable-next-line n/no-missing-import -- created by student in this assignment
 import { create, update } from "../controllers/taskController.js";
+// eslint-disable-next-line n/no-missing-import -- created by student in this assignment
 import { logon, register } from "../controllers/userController.js";
+// eslint-disable-next-line n/no-missing-import -- created by student in this assignment
 import { userSchema } from "../validation/userSchema.js";
+// eslint-disable-next-line n/no-missing-import -- created by student in this assignment
 import { taskSchema, patchTaskSchema } from "../validation/taskSchema.js";
-import { describe, it, expect, beforeEach } from 'vitest';
+import { describe, it, expect, beforeEach } from "vitest";
 
 describe("Assignment 4b: Advanced Validation, Patch Updates, and Password Security", () => {
   beforeEach(() => {

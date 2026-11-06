@@ -1,4 +1,4 @@
-const Joi = require("joi");
+import Joi from "joi";
 
 const taskSchema = Joi.object({
   title: Joi.string().trim().min(3).max(30).required(),
@@ -10,4 +10,4 @@ const patchTaskSchema = Joi.object({
   isCompleted: Joi.boolean().not(null),
 });
 
-module.exports = { taskSchema, patchTaskSchema };
+export default { taskSchema, patchTaskSchema };

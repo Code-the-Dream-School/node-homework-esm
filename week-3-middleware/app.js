@@ -1,15 +1,11 @@
 import express from "express";
-import dogsRouter from "./routes/dogs.js"
+import dogsRouter from "./routes/dogs.js";
 
 const app = express();
 
 // Assignment 3b and 3c ask you to add middleware in this file.
 
-
-
-
-app.use("/", dogsRouter);// Do not remove this line
-
+app.use("/", dogsRouter); // Do not remove this line
 
 if (import.meta.main) {
   app.listen(3000, () => {

@@ -1,7 +1,8 @@
-const readline = require("readline");
-const { Client } = require("pg");
-const Cursor = require("pg-cursor");
-require("dotenv").config();
+import readline from "readline";
+import { Client } from "pg";
+import Cursor from "pg-cursor";
+// eslint-disable-next-line n/no-missing-import -- created by student in this assignment
+import "./setenv.js";
 
 let client = null;
 let cursor = null;
@@ -64,11 +65,11 @@ async function sqlCommand() {
             rows.forEach((row) => {
               const rowStrings = row.map((column) => {
                 if (column === null) {
-                  return "null"
+                  return "null";
                 } else {
                   return column.toString();
                 }
-              })
+              });
               console.log(rowStrings.join("\t"));
             });
           } else {

@@ -1,6 +1,8 @@
-import "../setenvtest.js"
+import "../setenvtest.js";
+// eslint-disable-next-line n/no-missing-import -- created by student in this assignment
 import prisma from "../db/prisma.js";
 import httpMocks from "node-mocks-http";
+/* eslint-disable n/no-missing-import -- created by student in this assignment */
 import {
   index,
   show,
@@ -16,8 +18,8 @@ import {
   searchTasks,
 } from "../controllers/analyticsController.js";
 import errorHandlerMiddleware from "../middleware/error-handler.js";
-import { describe, it, expect, beforeAll, afterAll, fn } from 'vitest';
-
+/* eslint-enable n/no-missing-import */
+import { describe, it, expect, beforeAll, afterAll, fn } from "vitest";
 
 let user1 = null;
 let user2 = null;
@@ -71,16 +73,18 @@ describe("testing logon, register, and logoff with transactions", () => {
     expect(user1).toBeDefined();
     const welcomeTasks = await prisma.task.findMany({
       where: { userId: user1.id },
-      select: { title: true }
+      select: { title: true },
     });
     const taskTitles = welcomeTasks.map((task) => task.title);
     expect(taskTitles).toContain("Complete your profile");
     expect(taskTitles).toContain("Add your first task");
     expect(taskTitles).toContain("Explore the app");
-    
+
     // Also verify from saveData if available (from registration response)
     if (saveData && saveData.welcomeTasks) {
-      const responseTaskTitles = saveData.welcomeTasks.map((task) => task.title);
+      const responseTaskTitles = saveData.welcomeTasks.map(
+        (task) => task.title,
+      );
       expect(responseTaskTitles).toContain("Complete your profile");
       expect(responseTaskTitles).toContain("Add your first task");
       expect(responseTaskTitles).toContain("Explore the app");
@@ -94,7 +98,7 @@ describe("testing logon, register, and logoff with transactions", () => {
     });
     saveRes = httpMocks.createResponse();
     await logon(req, saveRes, () => {});
-    expect(saveRes.statusCode).toBe(200); 
+    expect(saveRes.statusCode).toBe(200);
   });
 
   it("returns the expected name.", () => {
@@ -450,15 +454,18 @@ let userSchema = null;
 let taskSchema = null;
 let patchTaskSchema = null;
 try {
-  ({userSchema} = await import("../validation/userSchema.js"));
-  ({ taskSchema, patchTaskSchema } = await import("../validation/taskSchema.js"));
+  /* eslint-disable n/no-missing-import -- created by student in this assignment */
+  ({ userSchema } = await import("../validation/userSchema.js"));
+  ({ taskSchema, patchTaskSchema } =
+    await import("../validation/taskSchema.js"));
+    /* eslint-enable n/no-missing-import */
 } catch {
   // these won't be built at the start, but we want the test to proceed
 }
 
 it("finds the user and task schemas", () => {
-  expect(userSchema).toBeDefined();
-  expect(taskSchema).toBeDefined();
+  expect(userSchema).toBeTruthy();
+  expect(taskSchema).toBeTruthy();
 });
 
 if (userSchema) {

@@ -1,7 +1,9 @@
-const prisma = require("../../db/prisma");
-const userSchema = require("../validation/userSchema").userSchema;
-const { randomUUID } = require("crypto");
-const jwt = require("jsonwebtoken");
+// eslint-disable-next-line n/no-missing-import -- created by student in this assignment
+import prisma from "../../db/prisma.js";
+// eslint-disable-next-line n/no-missing-import -- created by student in this assignment
+import { userSchema } from "../validation/userSchema.js";
+import { randomUUID } from "crypto";
+import jwt from "jsonwebtoken";
 
 const cookieFlags = (req) => {
   return {
@@ -21,8 +23,8 @@ const setJwtCookie = (req, res, user) => {
   return payload.csrfToken; // this is needed in the body returned by logon() or register()
 };
 
-const crypto = require("crypto");
-const util = require("util");
+import crypto from "crypto";
+import util from "util";
 const scrypt = util.promisify(crypto.scrypt);
 async function hashPassword(password) {
   const salt = crypto.randomBytes(16).toString("hex");
@@ -30,17 +32,17 @@ async function hashPassword(password) {
   return `${salt}:${derivedKey.toString("hex")}`;
 }
 
-async function comparePassword(inputPassword, storedHash) {
-  const [salt, key] = storedHash.split(":");
-  const keyBuffer = Buffer.from(key, "hex");
-  const derivedKey = await scrypt(inputPassword, salt, 64);
-  return crypto.timingSafeEqual(keyBuffer, derivedKey);
-}
+// async function comparePassword(inputPassword, storedHash) {
+//   const [salt, key] = storedHash.split(":");
+//   const keyBuffer = Buffer.from(key, "hex");
+//   const derivedKey = await scrypt(inputPassword, salt, 64);
+//   return crypto.timingSafeEqual(keyBuffer, derivedKey);
+// }
 
-exports.register = async (req, res, next) => {
+const register = async (req, res) => {
   const { error, value } = userSchema.validate(req.body, { abortEarly: false });
 
-  if (error) return next(error);
+  if (error) throw error;
 
   const { email, name, password } = value;
 
@@ -101,12 +103,12 @@ exports.register = async (req, res, next) => {
       // send the appropriate error back -- the email was already registered
       return res.status(400).json({ error: "Email already registered" });
     } else {
-      return next(err); // the error handler takes care of other errors
+      throw err; // the error handler takes care of other errors
     }
   }
 };
 
-exports.logon = async (req, res) => {
+const logon = async (req, res) => {
   const { email, password } = req.body;
 
   if (!email || !password) {
@@ -122,7 +124,7 @@ exports.logon = async (req, res) => {
     return res.status(401).json({ message: "Invalid credentials" });
   }
 
-  const isValidPassword = await comparePassword(password, user.hashedPassword);
+  // const isValidPassword = await comparePassword(password, user.hashedPassword);
 
   // if (!isValidPassword) {
   //   return res.status(401).json({ message: "Invalid credentials" });
@@ -138,13 +140,13 @@ exports.logon = async (req, res) => {
   });
 };
 
-exports.logoff = async (req, res) => {
+const logoff = async (req, res) => {
   // Clear the global user ID for session management
   // res.clearCookie("jwt", cookieFlags(req));
   res.sendStatus(200);
 };
 
-exports.show = async (req, res) => {
+const show = async (req, res) => {
   const userId = parseInt(req.params.id);
 
   if (isNaN(userId)) {
@@ -177,3 +179,5 @@ exports.show = async (req, res) => {
 
   res.status(200).json(user);
 };
+
+export default { register, logon, logoff, show };

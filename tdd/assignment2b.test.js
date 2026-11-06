@@ -2,7 +2,7 @@ import path from "path";
 import fs from "fs";
 import http from "http";
 import { spawn } from "child_process";
-import { describe, expect, beforeAll, afterAll, test } from 'vitest';
+import { describe, expect, beforeAll, afterAll, test } from "vitest";
 import request from "supertest";
 
 describe("Assignment 2b: Advanced HTTP and Express Edge Cases", () => {
@@ -109,6 +109,7 @@ describe("Assignment 2b: Advanced HTTP and Express Edge Cases", () => {
   });
 
   describe("Task 8: Express Unknown Route", async () => {
+    // eslint-disable-next-line n/no-missing-import -- created by student in this assignment
     const { app, server } = await import("../app.js");
     let agent;
 
