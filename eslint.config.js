@@ -33,6 +33,11 @@ export default [
           message: "Use export / export default instead of module.exports.",
         },
       ],
+      "no-unused-vars": ["error", {
+        argsIgnorePattern: "^(_|next$)",
+        varsIgnorePattern: "^_",
+        caughtErrorsIgnorePattern: "^_",
+      }],
     },
   },
 
